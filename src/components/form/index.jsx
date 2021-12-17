@@ -1,51 +1,54 @@
 import React, { useState, useEffect } from "react";
-import { Form, Select, Row, Button } from "antd";
+import { Form, Select, Button } from "antd";
 
 import { mock } from "../../mock";
 import { fetchForm } from "../../services/api";
 import { Builder } from "./Builder";
 
 const { Option } = Select;
-const formItemLayout = {
-  labelCol: {
-    span: 6,
-  },
-  wrapperCol: {
-    span: 14,
-  },
-};
 
 const FormView = () => {
   const [form, setForm] = useState(null);
   useEffect(() => {
     fetchForm().then((data) => {
-      console.log(data);
       setForm(data);
     });
   }, []);
 
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+    const noRisks = []
+    const riskDetails = []
+    form.formData.map(data=>{
+      data.fields.map(d => {
+      if (!d.isRiskIndicator) 
+      {
+        noRisks[d.name.toLowerCase()] = values[d.name]
+      } 
+      else {
+        riskDetails.push({headingId:data.id, formId: d.id, answer: values[d.name]})
+      }
+    })
+    })
+    const result = {...noRisks, riskDetails}
+    // need to send to server
+    console.log(result)
   };
-  console.log(form);
-  // mock.form.forEach(d=>console.log(d));
+
   return (
     <React.Fragment>
       {form ? (
         <Form
           name="validate_other"
-          {...formItemLayout}
           onFinish={onFinish}
           initialValues={{}}
+          layout="vertical"
         >
           <h1>{form.formName}</h1>
           {form.formData.map((data) => {
             return (
               <div key={data.id}>
                 <h1>{data.heading}</h1>
-                <Row gutter={[12, 12]}>
-                  <Builder fields={data.fields} />
-                </Row>
+                <Builder fields={data.fields} />
               </div>
             );
           })}

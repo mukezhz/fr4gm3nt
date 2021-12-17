@@ -5,6 +5,7 @@ const http = Axios.create({
   baseURL: config.baseURI,
   headers: {
     "Content-Type": "application/json",
+    "Bypass-Tunnel-Reminder": "true",
   },
 });
 

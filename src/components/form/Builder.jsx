@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Form, Select, Col } from "antd";
+import { Input, Form, Select } from "antd";
 const { Option } = Select;
 
 export const Builder = ({ fields }) => {
@@ -7,19 +7,16 @@ export const Builder = ({ fields }) => {
     switch (data.type) {
       case "input":
         return (
-          <Col span={12}>
             <Form.Item
               label={data.name}
               name={data.name}
-              rules={[{ required: true, message: "Please input your name!" }]}
+              rules={[{ required: true, message: `Please input your ${data.name}!` }]}
             >
               <Input />
             </Form.Item>
-          </Col>
         );
       case "dropdown":
         return (
-          <Col span={12}>
             <Form.Item
               name={data.name}
               label={data.name}
@@ -33,7 +30,6 @@ export const Builder = ({ fields }) => {
                 ))}
               </Select>
             </Form.Item>
-          </Col>
         );
       default:
         <>blank</>;
