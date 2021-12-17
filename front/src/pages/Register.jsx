@@ -2,7 +2,17 @@ import { useState } from "react"
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+
+
 const Register = () => {
+
+    // age
+    const [age, setAge] = useState(0);
+    const [startDate, setStartDate] = useState(new Date());
+
 
     // conditionals to show error message on register
     const [registerUserError, setRegisterUserError] = useState(false);
@@ -11,10 +21,26 @@ const Register = () => {
     // REACT HOOK FORM
     const { register: userRegister, handleSubmit: handleRegister, formState: { errors: registerErrors }, reset: registerReset } = useForm();
 
+    const handleDateChange = (dob) => {
+        setStartDate(dob);
+        var today = new Date();
+        var birthDate = new Date(dob);
+        var age = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        // console.log(dob);
+        // console.log(age);
+        setAge(age);
+    }
+
     const onRegisterSubmit = data => {
         console.log(data);
         registerReset();
     }
+
+
 
     return (
         <>
@@ -47,11 +73,28 @@ const Register = () => {
 
                             <div className="flex items-center mt-2">
                                 <div className="flex flex-col">
+                                    <span className="font-heading uppercase text-sm text-gray-800 font-bold">DOB</span>
+                                    {/* <input
+                                        {...userRegister("age", { required: true })}
+                                        className="w-1/2 text-gray-900 mt-2 p-3 rounded-lg border-2 border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                                        type="number" placeholder="age" value={age} disabled="true" /> */}
+                                    <DatePicker
+                                        className="w-2/3 text-gray-900 mt-2 p-3 rounded-lg border-2 border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                                        dateFormat="yyyy/MM/dd"
+                                        closeOnScroll={(e) => e.target === document}
+                                        selected={startDate}
+                                        onChange={(date) => {
+                                            handleDateChange(date);
+                                        }}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
                                     <span className="font-heading uppercase text-sm text-gray-800 font-bold">Age</span>
                                     <input
                                         {...userRegister("age", { required: true })}
                                         className="w-1/2 text-gray-900 mt-2 p-3 rounded-lg border-2 border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                                        type="number" placeholder="age" />
+                                        type="number" placeholder="age" value={age} disabled={true} />
 
                                     {/* handle errors */}
                                     {registerErrors.age?.type === 'required' && <p className="text-xs text-red-600 font-heading mt-2">Age is required.</p>}
@@ -71,7 +114,7 @@ const Register = () => {
 
                             </div>
 
-                            <div className="mt-8">
+                            <div className="mt-3">
                                 <span className="font-heading uppercase text-sm text-gray-800 font-bold">Email</span>
                                 <input
                                     onFocus={() => { setRegisterUserError(false) }}
