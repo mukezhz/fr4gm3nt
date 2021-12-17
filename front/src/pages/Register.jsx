@@ -35,7 +35,23 @@ const Register = () => {
         setAge(age);
     }
 
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+
     const onRegisterSubmit = data => {
+        data.dob = formatDate(startDate);
         console.log(data);
         registerReset();
     }
@@ -63,12 +79,12 @@ const Register = () => {
                                 {generalRegisterError && <p className="text-xs text-red-600 font-heading mt-2">Something went wrong. Please try again.</p>}
                                 <span className="font-heading uppercase text-sm text-gray-800 font-bold">Full Name</span>
                                 <input
-                                    {...userRegister("name", { required: true })}
+                                    {...userRegister("fullName", { required: true })}
                                     className="w-full text-gray-900 mt-2 p-3 rounded-lg border-2 border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                                     type="text" placeholder="Enter your name" />
 
                                 {/* handle errors */}
-                                {registerErrors.name?.type === 'required' && <p className="text-xs text-red-600 font-heading mt-2">Name is required.</p>}
+                                {registerErrors.fullName?.type === 'required' && <p className="text-xs text-red-600 font-heading mt-2">Name is required.</p>}
                             </div>
 
                             <div className="flex items-center mt-2">
@@ -87,17 +103,18 @@ const Register = () => {
                                             handleDateChange(date);
                                         }}
                                     />
+
+                                    {/* handle errors */}
+                                    {registerErrors.dob?.type === 'required' && <p className="text-xs text-red-600 font-heading mt-2">Dob is required.</p>}
                                 </div>
 
                                 <div className="flex flex-col">
                                     <span className="font-heading uppercase text-sm text-gray-800 font-bold">Age</span>
                                     <input
-                                        {...userRegister("age", { required: true })}
+
                                         className="w-1/2 text-gray-900 mt-2 p-3 rounded-lg border-2 border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                                         type="number" placeholder="age" value={age} disabled={true} />
 
-                                    {/* handle errors */}
-                                    {registerErrors.age?.type === 'required' && <p className="text-xs text-red-600 font-heading mt-2">Age is required.</p>}
                                 </div>
 
                                 <div className="flex flex-col">
@@ -169,10 +186,18 @@ const Register = () => {
 
                                     <div className="flex flex-col my-2">
                                         <span className="font-heading uppercase text-sm text-gray-800 font-bold">State</span>
-                                        <input
-                                            {...userRegister("state", { required: true })}
-                                            className="w-full text-gray-900 mt-1 p-3 rounded-lg border-2 border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                                            type="text" placeholder="state" />
+                                        <select
+                                            {...userRegister("gender", { required: true })}
+                                            placeholder="state"
+                                            className="text-gray-900 mt-2 p-3 rounded-lg border-2 bg-white border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                                            <option value="1">State-1</option>
+                                            <option value="2">State-2</option>
+                                            <option value="3">State-3</option>
+                                            <option value="4">State-4</option>
+                                            <option value="5">State-5</option>
+                                            <option value="7">State-6</option>
+                                            <option value="7">State-7</option>
+                                        </select>
 
                                         {/* handle errors */}
                                         {registerErrors.state?.type === 'required' && <p className="text-xs text-red-600 font-heading mt-2">State is required.</p>}
