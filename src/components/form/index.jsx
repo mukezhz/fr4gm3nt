@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Form, Select, Button } from "antd";
+import { Form, Button } from "antd";
 
-import { mock } from "../../mock";
 import { fetchForm } from "../../services/api";
 import { Builder } from "./Builder";
 
-const { Option } = Select;
 
 const FormView = () => {
   const [form, setForm] = useState(null);
