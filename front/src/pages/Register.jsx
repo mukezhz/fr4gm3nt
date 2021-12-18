@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+import fmapi from "../api/fmapi"
+import ageCalc from "../helpers/ageCalc";
+
 
 
 const Register = () => {
@@ -23,37 +26,47 @@ const Register = () => {
 
     const handleDateChange = (dob) => {
         setStartDate(dob);
-        var today = new Date();
-        var birthDate = new Date(dob);
-        var age = today.getFullYear() - birthDate.getFullYear();
-        var m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
+        
+        const age = ageCalc(dob)
         // console.log(dob);
         // console.log(age);
         setAge(age);
     }
 
-    function formatDate(date) {
+    const formatDate = (date) => {
         var d = new Date(date),
             month = '' + (d.getMonth() + 1),
             day = '' + d.getDate(),
             year = d.getFullYear();
-
+    
         if (month.length < 2)
             month = '0' + month;
         if (day.length < 2)
             day = '0' + day;
-
+    
         return [year, month, day].join('-');
+    }
+
+
+    const registerUser = async (data) => {
+
+        try{
+            console.log(data);
+            const response =  await fmapi.post('/app-users/register', data)
+            
+        }catch(error){
+            console.log(error);
+        }
+
     }
 
 
     const onRegisterSubmit = data => {
         data.dob = formatDate(startDate);
-        console.log(data);
-        registerReset();
+
+        registerUser(data);
+        // console.log(data);
+        // registerReset();
     }
 
 
@@ -97,6 +110,7 @@ const Register = () => {
                                     <DatePicker
                                         className="w-2/3 text-gray-900 mt-2 p-3 rounded-lg border-2 border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                                         dateFormat="yyyy/MM/dd"
+                                        required={true}
                                         closeOnScroll={(e) => e.target === document}
                                         selected={startDate}
                                         onChange={(date) => {
@@ -117,18 +131,19 @@ const Register = () => {
 
                                 </div>
 
-                                <div className="flex flex-col">
-                                    <span className="font-heading uppercase text-sm text-gray-800 font-bold">Gender</span>
-                                    <select
-                                        {...userRegister("gender", { required: true })}
-                                        className="text-gray-900 mt-2 p-3 rounded-lg border-2 bg-white border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">
-                                        <option value="male">male</option>
-                                        <option value="female">female</option>
-                                        <option value="other">other</option>
-                                    </select>
-                                    {registerErrors.gender?.type === 'required' && <p className="text-xs text-red-600 font-heading mt-2">Gender is required.</p>}
-                                </div>
 
+
+                            </div>
+                            <div className="flex flex-col mt-5">
+                                <span className="font-heading uppercase text-sm text-gray-800 font-bold">Gender</span>
+                                <select
+                                    {...userRegister("gender", { required: true })}
+                                    className="text-gray-900 mt-2 p-3 rounded-lg border-2 bg-white border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                                    <option value="male">male</option>
+                                    <option value="female">female</option>
+                                    <option value="other">other</option>
+                                </select>
+                                {registerErrors.gender?.type === 'required' && <p className="text-xs text-red-600 font-heading mt-2">Gender is required.</p>}
                             </div>
 
                             <div className="mt-3">
