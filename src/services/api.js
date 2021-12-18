@@ -6,3 +6,15 @@ export const fetchForm = async () => {
   const response = await http.get(`${url}/94`);
   return response.data;
 };
+
+export const fetchDynamicForm = async () => {
+  const url = config.endpoints.form.v2;
+  const response = await http.get(`${url}`);
+  return response.data;
+};
+
+export const fetchDynamicFormById = async (id) => {
+  const url = config.endpoints.form.v2;
+  const response = await http.get(`${url}/${id}`);
+  return response.data;
+};

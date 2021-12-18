@@ -9,4 +9,11 @@ const http = Axios.create({
   },
 });
 
+export const weatherHttp = Axios.create({
+  baseURL: config.weatherBaseURI,
+  headers: {
+    "Content-Type": "application/json",
+  },
+})
+
 export default http;
